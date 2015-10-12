@@ -1,0 +1,74 @@
+﻿<html>
+<head>
+</head>
+<body>
+	<div id="sendtweet">
+	  	<input type="text" class="tweettext" value="" size="140"><br>
+	  	<input type="button" class="sendbutton" value="Отправить твит">
+	</div>
+
+	<div id="searchimagesbytag">
+	  	<input type="text" class="tagname" value=""><br>
+	  	<input type="button" class="search" value="Найти картинку">
+	  	<div class="founded_images">
+	  	</div>
+	</div>
+
+	<script type="text/javascript" src="libs/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script>
+
+
+	  	$( document ).ready(function() {
+			
+			$.get('getip', function(data){
+				var ip = 'http://'+data;
+		  		// var socket = io('http://localhost:3000');
+		  		var socket = io(ip);
+			  	
+			  	var sendtweetblock = $('#sendtweet');
+			  	sendtweetblock.children('.sendbutton').bind('click', function () {
+			  		var tweettext = sendtweetblock.children('input.tweettext').val();
+	    			socket.emit('sendtweet', { text: tweettext });
+	    			sendtweetblock.children('input.tweettext').val('');
+			  	});
+
+
+			  	var searchimagesbytagblock = $('#searchimagesbytag');
+			  	var founded_images = searchimagesbytagblock.children('.founded_images');
+
+			  	searchimagesbytagblock.children('.search').bind('click', function () {
+			  		var tagname = searchimagesbytagblock.children('.tagname').val();
+
+			  		if(tagname)
+			  		{
+			  			socket.emit('searchimagesbytag', { tag: tagname });
+			  		}
+			  	});
+			  	socket.on('founded:images', function (data) {
+
+			  		var markup = '';
+			  		if(data && data.list)
+			  		{
+			  			data.list.forEach(function (image_url) {
+			  				markup += '<div style="display:inline-block;text-align:center;">'
+			  					markup += '<a href="'+image_url+'" target="_blank">'
+			  						markup += '<img src="'+image_url+'" style="max-width:150px;border:1px solid black;vertical-align:top;"/>';
+			  					markup +='</a>'
+			  				markup += '</div>'
+			  			});
+			  		}
+			  		else
+			  		{
+			  			markup += 'нет результатов'
+			  		}
+
+			  		founded_images.html(markup);
+			  	});
+	        });
+		  	
+		});
+
+	</script>
+</body>
+</html>

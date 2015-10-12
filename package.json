@@ -1,0 +1,17 @@
+{
+  "name": "Tweet",
+  "description": "Use twitter API to send tweets and search images by tag",
+  "author": {
+    "name": "Novikov Denis",
+    "email": "den-vse@yandex.ru",
+    "url": "http://dehimer.github.io/"
+  },
+  "engines": {
+    "node": ">= 0.4.5"
+  },
+  "dependencies": {
+    "node-static":">=0.7.3",
+    "socket.io": ">=1.0.6",
+    "twitter": "0.2.9"
+  }
+}
